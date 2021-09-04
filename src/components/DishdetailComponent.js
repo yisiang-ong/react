@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, CardImg, CardImgOverlay, CardText, CardBody,
+import { Card, CardImg, CardText, CardBody,
     CardTitle } from 'reactstrap';
 class DishDetail extends Component{
     constructor(props) {
@@ -9,20 +9,20 @@ class DishDetail extends Component{
         }
     }
 
-    renderComments(detail){
-        if (detail != null){
-            const dateformatter = new Intl.DateTimeFormat("en", { 
+    renderComments(dish){
+        if (dish != null){
+            const dateformatter = new Intl.DateTimeFormat("en-US", { 
                 year: "numeric",
                 month: "short", 
-                day: "numeric" 
+                day: "2-digit" 
             });
-            const comments = detail.comments.map((comment) => {
+            const comments = dish.comments.map((comment) => {
                 return(
                     <ul key={comment.id} className="list-unstyled">
                         <li>{comment.comment}</li>
                         <li>
                             -- {comment.author}, { }
-                            {dateformatter.format(new Date(comment.date))}
+                            {dateformatter.format(new Date(Date.parse(comment.date)))}
                         </li>
                     </ul>
                 )
@@ -38,15 +38,15 @@ class DishDetail extends Component{
             return <div></div>;
         }
     }
-    renderDish(detail) {
-        if (detail != null) {
+    renderDish(dish) {
+        if (dish != null) {
           return (
             
             <Card>
-                <CardImg width="100%" src={detail.image} alt={detail.name} />
+                <CardImg width="100%" src={dish.image} alt={dish.name} />
                 <CardBody>
-                <CardTitle>{detail.name}</CardTitle>
-                <CardText>{detail.description}</CardText>
+                <CardTitle>{dish.name}</CardTitle>
+                <CardText>{dish.description}</CardText>
                 </CardBody>
             </Card>
 
@@ -57,17 +57,20 @@ class DishDetail extends Component{
       }
     render() {
     
-        const detail = this.props.detail;
+        const dish = this.props.dish;
         console.log("dish detail render is invoked.");
         return(
-            <div className="row">
-                <div className="col-12 col-md-5 m-1">
-                    {this.renderDish(detail)}
-                </div>
-                <div className="col-12 col-md-5 m-1">
-                    {this.renderComments(detail)}
-                </div>
+            <div className="container">
+                <div className="row">
+                    <div className="col-12 col-md-5 m-1">
+                        {this.renderDish(dish)}
+                    </div>
+                    <div className="col-12 col-md-5 m-1">
+                        {this.renderComments(dish)}
+                    </div>
+                </div>    
             </div>
+            
             
         );
     }
