@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { Control, LocalForm, Errors } from 'react-redux-form';
 import { Loading } from './LoadingComponent';
 import { baseUrl } from '../shared/baseUrl';
-    function RenderComments({comments, addComment, dishId}) {
+    function RenderComments({comments, postComment, dishId}) {
         const dateformatter = new Intl.DateTimeFormat("en-US", { 
             year: "numeric",
             month: "short", 
@@ -27,7 +27,7 @@ import { baseUrl } from '../shared/baseUrl';
                         })}
                     </ul>
                     {/* Render CommentForm from CommentForm.js */}
-                    <CommentForm dishId={dishId} addComment={addComment} />
+                    <CommentForm dishId={dishId} postComment={postComment} />
                 </div>
             );
         } else {
@@ -84,7 +84,7 @@ import { baseUrl } from '../shared/baseUrl';
               // use addCommetn function from /redux/ActionCreator.js which is passed through MainComponent.js
               if(!values.rating)
                   values={...values,rating:"1"}
-              this.props.addComment(this.props.dishId, values.rating, values.author, values.comment);
+              this.props.postComment(this.props.dishId, values.rating, values.author, values.comment);
               // event.preventDefault();
           }
       
@@ -190,7 +190,7 @@ import { baseUrl } from '../shared/baseUrl';
                     <div className="row">
                         <RenderDish dish = {props.dish} />
                         <RenderComments comments = {props.comments} 
-                            addComment={props.addComment}
+                            postComment={props.postComment}
                             dishId={props.dish.id}
                         />
                     </div>
