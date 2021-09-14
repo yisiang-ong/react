@@ -3,56 +3,60 @@ import { Breadcrumb, BreadcrumbItem, Card, CardBody, CardHeader, Media } from 'r
 import { Link } from 'react-router-dom';
 import { Loading } from './LoadingComponent';
 import { baseUrl } from '../shared/baseUrl';
-import { FadeTransform, Stagger, Fade } from 'react-animation-components';
+import { Fade, Stagger } from 'react-animation-components';
 
-function RenderLeader ({leader, isLoading, errMess}) {
+function RenderLeader({leader}) {
+    return(
+        <Media tag="li">
+            <Media left middle>
+                <Media object src={baseUrl + leader.image} alt={leader.name} />
+            </Media>
+            <Media body className="ml-5">
+                <Media heading>{leader.name}</Media>
+                <p>{leader.designation}</p>
+                <p>{leader.description}</p>
+            </Media>
+        </Media>
+    );
 
-    if (isLoading) {
+}
+
+function LeaderList(props) {
+
+    const leaders = props.leaders.leaders.map((leader) => {
+        return (
+            <Fade in key={leader._id}>
+                <div className="col-12 mt-2">
+                        <RenderLeader leader={leader} />
+                </div>
+            </Fade>
+        );
+    });
+
+    if (props.leaders.isLoading) {
         return(
                 <Loading />
         );
     }
-    else if (errMess) {
+    else if (props.leaders.errMess) {
         return(
-                <h4>{errMess}</h4>
+            <div className="col-12"> 
+                <h4>{props.leaders.errMess}</h4>
+            </div>
         );
     }
-    else 
+    else {
         return (
-            <FadeTransform
-                in
-                transformProps={{
-                    exitTransform: 'scale(0.5) translateY(-50%)'
-                }}>
-                <Media tag="li" className="mt-0 mb-1">
-                    <Media left top className="col-12 col-md-3 m-1" href="#">
-                        <Media object src={baseUrl +leader.image} alt={leader.name} />
-                    </Media>
-                    <Media body className="col-12 col-md m-1">
-                        <Media heading>
-                            {leader.name}
-                        </Media>
-                        <Media subheadding>
-                            {leader.designation}
-                        </Media>
-                        <br/>
-                        {leader.description}
-                    </Media>
-                </Media>
-            </FadeTransform>
+            <Media list>
+                <Stagger in>
+                    {leaders}
+                </Stagger>
+            </Media>
         );
+    }
 }
-function About(props) {
 
-    const leaderLoading = props.leaders.isLoading;
-    const leaderErrMess = props.leaders.errMess;
-    const leaders = props.leaders.leaders.map((leader) => {
-        return (
-            <Fade in>
-                <RenderLeader leader={leader} isLoading={leaderLoading} errMess={leaderErrMess} />
-            </Fade>
-        );
-    });
+function About(props) {
 
     return(
         <div className="container">
@@ -108,13 +112,7 @@ function About(props) {
                 <div className="col-12">
                     <h2>Corporate Leadership</h2>
                 </div>
-                <div className="col-12">
-                    <Media list>
-                        <Stagger in>
-                            {leaders}
-                        </Stagger>
-                    </Media>
-                </div>
+                <LeaderList leaders={props.leaders} />
             </div>
         </div>
     );
